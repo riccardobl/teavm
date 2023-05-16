@@ -25,6 +25,12 @@ import org.teavm.junit.TeaVMTestRunner;
 @RunWith(TeaVMTestRunner.class)
 public class IntegerTest {
     @Test
+    public void testRightUnsignedShift() {
+        assertEquals(1 << 31, Integer.MIN_VALUE >>> Integer.parseInt("0"));
+        assertEquals(-1, -1 >>> Integer.parseInt("0"));
+    }
+
+    @Test
     public void parsesInteger() {
         assertEquals(0, Integer.parseInt("0", 10));
         assertEquals(473, Integer.parseInt("473", 10));
@@ -76,6 +82,7 @@ public class IntegerTest {
 
     @Test
     public void numberOfLeadingZerosComputed() {
+        assertEquals(0, Integer.numberOfLeadingZeros(-1));
         assertEquals(1, Integer.numberOfLeadingZeros(0x40000000));
         assertEquals(1, Integer.numberOfLeadingZeros(0x40000123));
         assertEquals(1, Integer.numberOfLeadingZeros(0x7FFFFFFF));
@@ -100,6 +107,21 @@ public class IntegerTest {
         assertEquals(0,  Integer.numberOfTrailingZeros(0x12300003));
         assertEquals(0,  Integer.numberOfTrailingZeros(0xFFFFFFFF));
         assertEquals(32, Integer.numberOfTrailingZeros(0));
+    }
+
+    @Test
+    public void highestOneBit() {
+        assertEquals(1 << 31, Integer.highestOneBit(-1));
+        assertEquals(1 << 31, Integer.highestOneBit(Integer.MIN_VALUE));
+        assertEquals(0, Integer.highestOneBit(0));
+        assertEquals(16, Integer.highestOneBit(31));
+    }
+
+    @Test
+    public void lowestOneBit() {
+        assertEquals(0, Integer.lowestOneBit(0));
+        assertEquals(2, Integer.lowestOneBit(50));
+        assertEquals(1, Integer.lowestOneBit(-1));
     }
 
     @Test
