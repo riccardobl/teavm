@@ -160,4 +160,27 @@ public class IntegerTest {
         assertEquals("ff", Integer.toHexString(255));
         assertEquals("ffffffff", Integer.toHexString(-1));
     }
+
+    @Test
+    public void toStringRadix16() {
+        assertEquals("17", Integer.toString(23, 16));
+        assertEquals("1e240", Integer.toString(123456, 16));
+        assertEquals("-17", Integer.toString(-23, 16));
+        assertEquals("7fffffff", Integer.toString(Integer.MAX_VALUE, 16));
+        assertEquals("-80000000", Integer.toString(Integer.MIN_VALUE, 16));
+    }
+
+    @Test
+    public void toStringRadix2() {
+        assertEquals("10111", Integer.toString(23, 2));
+        assertEquals("11110001001000000", Integer.toString(123456, 2));
+        assertEquals("-10111", Integer.toString(-23, 2));
+        assertEquals("1111111111111111111111111111111", Integer.toString(Integer.MAX_VALUE, 2));
+        assertEquals("-10000000000000000000000000000000", Integer.toString(Integer.MIN_VALUE, 2));
+    }
+
+    @Test
+    public void unsignedRightShift() {
+        assertEquals(Integer.MIN_VALUE, Integer.MIN_VALUE >>> Integer.parseInt("0"));
+    }
 }
