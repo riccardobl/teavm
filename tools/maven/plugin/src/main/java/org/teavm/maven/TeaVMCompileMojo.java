@@ -316,7 +316,7 @@ public class TeaVMCompileMojo extends AbstractMojo {
 
     private String[] createDaemonClassPath() {
         Artifact toolArtifact = pluginArtifacts.stream()
-                .filter(artifact -> artifact.getGroupId().equals("org.teavm")
+                .filter(artifact -> artifact.getGroupId().equals("wf.frk.teavm")
                         && artifact.getArtifactId().equals("teavm-tooling"))
                 .findFirst()
                 .orElse(null);

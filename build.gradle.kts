@@ -18,6 +18,6 @@ plugins {
     idea
 }
 
-group = "org.teavm"
+group = "wf.frk.teavm"
 
 idea.module.excludeDirs.add(File(rootDir, "build-dir"))

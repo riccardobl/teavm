@@ -88,7 +88,7 @@ public abstract class PublishTeaVMPlugin implements Plugin<Project> {
     }
 
     private void customizePublication(Project project, MavenPublication publication, ExtensionImpl extension) {
-        publication.setGroupId("org.teavm");
+        publication.setGroupId("wf.frk.teavm");
         if (extension.getArtifactId() != null) {
             publication.setArtifactId(extension.getArtifactId());
         }

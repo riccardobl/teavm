@@ -14,36 +14,38 @@
 #  limitations under the License.
 #
 
-mkdir -p build-dir
-
-git fetch
-git archive release-0.8.x | tar -x -C build-dir || { echo 'Git archive failed' ; exit 1; }
+set -e
 
 TEAVM_RELEASE_VERSION=$1
 
 function release_teavm {
   echo "Building version $TEAVM_RELEASE_VERSION"
+  KEY_RING_FILE="$PWD/tmpring.gpg"
+  echo "$TEAVM_GPG_KEY" > ./private.key
+  gpg --no-default-keyring --keyring "$KEY_RING_FILE"  --import ./private.key
+  TEAVM_GPG_KEY_ID=`gpg  --no-default-keyring --keyring "$KEY_RING_FILE" --keyid-format short --list-secret-keys  | awk '/^sec/ { print $2; exit }' | cut -d '/' -f 2`
 
-  GRADLE="./gradlew"
+  gpg --no-default-keyring --keyring "$KEY_RING_FILE" --export-secret-keys -o "$PWD/secring.gpg"
+  KEY_RING_FILE="$PWD/secring.gpg"
+
+
+  GRADLE="$PWD/gradlew"
   GRADLE+=" --no-daemon --no-configuration-cache --stacktrace"
   GRADLE+=" -Pteavm.mavenCentral.publish=true"
   GRADLE+=" -Pteavm.project.version=$TEAVM_RELEASE_VERSION"
   GRADLE+=" -Psigning.keyId=$TEAVM_GPG_KEY_ID"
-  GRADLE+=" -Psigning.password=$TEAVM_GPG_PASSWORD"
-  GRADLE+=" -Psigning.secretKeyRingFile=$HOME/.gnupg/secring.gpg"
+  GRADLE+=" -Psigning.password=''"
+  GRADLE+=" -Psigning.secretKeyRingFile=$KEY_RING_FILE"
   GRADLE+=" -PossrhUsername=$TEAVM_SONATYPE_LOGIN"
   GRADLE+=" -PossrhPassword=$TEAVM_SONATYPE_PASSWORD"
-  GRADLE+=" -Pteavm.idea.publishToken=$TEAVM_INTELLIJ_TOKEN"
 
   $GRADLE build -x test || { echo 'Build failed' ; return 1; }
   $GRADLE --max-workers 1 publish publishPlugin publishPlugins || { echo 'Release failed' ; return 1; }
 
+  rm "$PWD/tmpring.gpg" || true
+  rm "$PWD/secring.gpg" || true
+  rm "$PWD/private.key" || true
   return 0
 }
 
-pushd build-dir
 release_teavm
-EXIT_CODE=$?
-popd
-rm -rf build-dir
-exit $EXIT_CODE

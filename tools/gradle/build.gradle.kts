@@ -37,13 +37,13 @@ pluginBundle {
 gradlePlugin {
     plugins {
         create("TeaVMPlugin") {
-            id = "org.teavm"
+            id = "wf.frk.teavm"
             implementationClass = "org.teavm.gradle.TeaVMPlugin"
             displayName = "TeaVM application plugin"
             description = "Installs TeaVM compilation tasks, configurations and source sets"
         }
         create("TeaVMLibraryPlugin") {
-            id = "org.teavm.library"
+            id = "wf.frk.teavm.library"
             implementationClass = "org.teavm.gradle.TeaVMLibraryPlugin"
             displayName = "TeaVM library plugin"
             description = "Installs TeaVM DSL for consuming TeaVM libraries and running tests in a browser"
@@ -113,7 +113,7 @@ tasks.withType<Checkstyle> {
 publishing {
     publications {
         create<MavenPublication>("pluginMaven") {
-            groupId = "org.teavm"
+            groupId = "wf.frk.teavm"
             artifactId = "teavm-gradle-plugin"
         }
     }
