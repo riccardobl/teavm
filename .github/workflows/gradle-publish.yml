@@ -33,6 +33,7 @@ jobs:
     - name: Build and publish
       run: |          
         version="`if [[ $GITHUB_REF == refs\/tags* ]]; then echo ${GITHUB_REF//refs\/tags\//}; fi`"
+        sed -i "s/^teavm.project.version=.*/teavm.project.version=$version/" gradle.properties
         ./gradlew publishToMavenLocal
         source .github/actions/tools/uploadToMaven.sh
         ls ~/.m2/repository/
